@@ -59,35 +59,35 @@ function App() {
           }
         />
         <Route
-          path="/detail"
+          path="/detail/:id"
           element={
             <div>
-              <Detail />
+              <Detail shoes={shoes}/>
             </div>
           }
         />
 
-          {/*Nested Route 하위페이지임, 여러 유사한 하위페이지들이 필요할 때*/}
-          <Route path="/about" element={<About/>}>
-              <Route path="member" element={<dev>멤버정보임</dev>} />
-              <Route path="location" element={<dev>위치정보임</dev>} />
-          </Route>
+        {/*Nested Route 하위페이지임, 여러 유사한 하위페이지들이 필요할 때*/}
+        <Route path="/about" element={<About />}>
+          <Route path="member" element={<dev>멤버정보임</dev>} />
+          <Route path="location" element={<dev>위치정보임</dev>} />
+        </Route>
 
-          <Route path="*" element={<dev>없는 페이지다 빡대가리야</dev>} />
+        <Route path="*" element={<dev>없는 페이지다 빡대가리야</dev>} />
       </Routes>
     </div>
   );
 }
 
-function About(){
-    return(
-        <div>
-            <h4>회사정보임</h4>
-            {/*nested route에서 /about/member로 접속했을때 member부분을 보여줄 부분*/}
-            {/*즉, 상위페이지에서 하위페이지를 보여줄 부분*/}
-            <Outlet></Outlet>
-        </div>
-    )
+function About() {
+  return (
+    <div>
+      <h4>회사정보임</h4>
+      {/*nested route에서 /about/member로 접속했을때 member부분을 보여줄 부분*/}
+      {/*즉, 상위페이지에서 하위페이지를 보여줄 부분*/}
+      <Outlet></Outlet>
+    </div>
+  );
 }
 
 export default App;
