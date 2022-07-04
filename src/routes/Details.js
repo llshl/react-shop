@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 // 스타일 태그를 줄때 자바스크립트 파일 안에서 다 해결 가능
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Nav } from 'react-bootstrap';
 // 장점1. 다른 js파일에 설정한 스타일이 오염되지 않음
 // 장점2. 로딩시간이 빨라진다
 
@@ -50,6 +50,7 @@ function Detail(props) {
   let [count, setCount] = useState(0);
   let [secAlert, setSecAlert] = useState(true);
   let [num, setNum] = useState('');
+  let [tab, setTab] = useState(2);
 
   // 현재 url의 파라미터정보가 들어옴 /:id 이거
   let { id } = useParams();
@@ -67,8 +68,18 @@ function Detail(props) {
     }
   }, [num]);
 
+  let [fade2, setFade2] = useState('');
+  useEffect(() => {
+    setTimeout(() => {
+      setFade2('end');
+    }, 10);
+    return () => {
+      setFade2('');
+    };
+  }, []);
+
   return (
-    <div className="container">
+    <div className={`container start ${fade2}`}>
       {
         // 2초 지나면 사라지는 div
         secAlert ? (
@@ -107,8 +118,71 @@ function Detail(props) {
           <button className="btn btn-danger">주문하기</button>
         </div>
       </div>
+
+      <Nav variant="tabs" defaultActiveKey="link0">
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTab(0);
+            }}
+            eventKey="link0"
+          >
+            버튼0
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTab(1);
+            }}
+            eventKey="link1"
+          >
+            버튼1
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTab(2);
+            }}
+            eventKey="link2"
+          >
+            버튼2
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+      <TabContent tab={tab} />
     </div>
   );
+}
+function TabContent(props) {
+  // if(props.tab === 0){
+  //     return <div>내용0</div>
+  // }
+  // if(props.tab === 1){
+  //     return <div>내용1</div>
+  // }
+  // if(props.tab === 2){
+  //     return <div>내용2</div>
+  // }
+  let [fade, setFade] = useState('');
+  useEffect(() => {
+    // 왜 타이머함수를 써야하나? -> 리액트의 automatic batching때문
+    // state들이 변경이 여러번될때 다 변경되고 마지막 변경이 끝나면 재랜더링하기때문
+    // 우리는 state들이 변경될때마다 재랜더링을 해야하기에 타이머함수로 강제로 랜더링을 돌려준 것
+    setTimeout(() => {
+      setFade('end');
+    }, 10);
+    return () => {
+      // useEffect가 실행되기 전에 실행됨(beforeEach)
+      setFade('');
+    };
+  }, [props.tab]); // tab state가 변할때마다 실행됨
+  return (
+    <div className={`start ${fade}`}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][props.tab]}
+    </div>
+  ); // if문 안쓰고 배열 인덱스로 접근해도 됨
 }
 
 export default Detail;
